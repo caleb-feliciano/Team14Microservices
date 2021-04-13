@@ -163,9 +163,27 @@ function fetchComments($id) {
 }
 
 function setComment($id) {
-
+    
     //TODO complete implementation using the product id
-    alert("app.js/setComment() not implemented")
+    let comment =$.trim($('#message-text').val());
+    let score =$.trim($('#score').val());
+
+    $.ajax({
+        url: Url+'SetComment', 
+        type: 'post',
+        dataType: 'json',
+        contentType: 'text/plain',
+        data: JSON.stringify({"product_id":$id,
+                "comment":comment,
+                "score":score}),
+
+        success: function (data) {
+            alert("Successfully set a comment.");
+        },
+        error: function (data) {
+            alert("Error. Could not set comment");
+        }
+    });
 
     //HINT
     //Take note of how the Ajax call in app.js/fetchComments() posts a GET request to corresponding API endpoint.
@@ -174,9 +192,25 @@ function setComment($id) {
 }
 
 function addToCart($id) {
-
+    
     //TODO complete implementation using the product id
-    alert("app.js/addToCart() not implemented")
+    let email =$.trim($('#email').val());
+
+    $.ajax({
+        url: Url+'AddToCart', 
+        type: 'post',
+        dataType: 'json',
+        contentType: 'text/plain',
+        data: JSON.stringify({"product_id":$id,
+                "email":email}),
+
+        success: function (data) {
+            alert("Successfully added item to cart.");
+        },
+        error: function (data) {
+            alert("Error. Could not add to cart.");
+        }
+    });
 
 
 }
