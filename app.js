@@ -239,6 +239,12 @@ function toShoppingCart(){
 /* I'm feeling lucky feature - Vincent Scala */
 function feelingLucky() {
 
+
+    jsonObj = [];
+    item = {};
+    var productList;
+    var productListAdd;
+
     !($.trim($('#title').val()) == '') ? item ["title"] = $('#title').val(): '';
     !($.trim($('#operating_system').val()) == '') ? item ["operating_system"] = $('#operating_system').val(): '';
     !($.trim($('#min_price').val()) == '') ? item ["price_from"] = $('#min_price').val(): '';
@@ -246,22 +252,57 @@ function feelingLucky() {
 
     jsonObj.push(item);
 
+    //jQuery Ajax request
     $.ajax({
-        url: Url+'GetProduct', 
-        type: 'get',
-        dataType: 'json', 
-        contentType: 'text/plain', 
-        data: jsonObj[0], 
+        url: Url+'GetProduct', //API url
+        type: 'get', //type of request (get)
+        dataType: 'json', //dataType, which is json for this lab.
+        contentType: 'text/plain', //contentType, which is text/plain since json is sent as plain text.
+        data: jsonObj[0], //data to be sent
 
-        success: function (data) { 
+        success: function (data) { //on success calls this functions and passes the API response as the data parameter.
+            productList='';
+
+            $.each(data['data']['List'], function(i, item) {
+
+                //this is HTML code that is reactively added to the page, your TODO solutions do not need this.
+                productListAdd = '<div class="col-sm-6 col-md-4 col-lg-3 mt-4" id="product'+item['id']+'">\n' +
+                    '            <div class="card card-inverse card-info">\n' +
+                    '                <img class="card-img-top" src="'+item['image']+'">\n' +
+                    '                <div class="card-block">\n' +
+                    '                    <h4><span class="badge badge-danger">'+item['price']+'</span></h4>\n' +
+                    '                    <div class="meta card-text">\n' +
+                    '                        <a style="color: deepskyblue">Category - Cell Phones</a>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="card-text">\n' +
+                    '                        '+item['title'].substring(0,50)+'... more\n' +
+                    '                    </div>\n' +
+                    '                </div>\n' +
+                    '                <div class="card-footer">\n' +
+                    '                    <small>More information ...</small>\n' +
+                    '                    <button class="btn btn-info float-right btn-sm" onclick="fetchOneProduct('+item['id']+')">Detail</button>\n' +
+                    '                </div>\n' +
+                    '                <div class="card-footer">\n' +
+                    '                    <small>Quantity: </small>\n' +
+                    '                    <select class="quanitiy-select" id ="quantity"> <option value="1">1</option><option value="2">2</option><option value="3">3</option> </select>\n'+
+                    '                    <button class="btn btn-info float-right btn-sm" onclick="addToCart('+item['id']+')">Add to Cart</button>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '        </div>';
+                productList=productList+productListAdd;
+
+            });
+            $('#items').html(productList);
+
             fetchOneProduct(data['data']['List'][0]['id'])
 
         },
-        error: function (data) { 
+        error: function (data) { //on error, alert the user.
             alert("Error while fetching data.");
         }
 
     });
+
 }
 
 $('#exampleModal').on('show.bs.modal', function (event) {
