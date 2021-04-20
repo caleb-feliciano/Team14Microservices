@@ -45,6 +45,8 @@ function fetchProductList() {
                     '                    <button class="btn btn-info float-right btn-sm" onclick="fetchOneProduct('+item['id']+')">Detail</button>\n' +
                     '                </div>\n' +
                     '                <div class="card-footer">\n' +
+                    '                    <small>Quantity: </small>\n' +
+                    '                    <select class="quanitiy-select" id ="quantity"> <option value="1">1</option><option value="2">2</option><option value="3">3</option> </select>\n'+
                     '                    <button class="btn btn-info float-right btn-sm" onclick="addToCart('+item['id']+')">Add to Cart</button>\n' +
                     '                </div>\n' +
                     '            </div>\n' +
@@ -196,23 +198,29 @@ function addToCart($id) {
     //TODO complete implementation using the product id
     let email =$.trim($('#email').val());
 
-    $.ajax({
-        url: Url+'AddToCart', 
-        type: 'post',
-        dataType: 'json',
-        contentType: 'text/plain',
-        data: JSON.stringify({"product_id":$id,
-                "email":email}),
-
-        success: function (data) {
-            alert("Successfully added item to cart.");
-        },
-        error: function (data) {
-            alert("Error. Could not add to cart.");
-        }
-    });
+    //Caleb's Feature
+    var quantity = document.getElementById("quantity");
+    var counter = quantity.options[quantity.selectedIndex].text;
 
 
+    while (counter != 0) {
+        $.ajax({
+            url: Url+'AddToCart', 
+            type: 'post',
+            dataType: 'json',
+            contentType: 'text/plain',
+            data: JSON.stringify({"product_id":$id,
+                    "email":email}),
+
+            success: function (data) {
+                alert("Successfully added item to cart.");
+            },
+            error: function (data) {
+                alert("Error. Could not add to cart.");
+            }
+        });
+        counter--;
+    }
 }
 
 function toShoppingCart(){
