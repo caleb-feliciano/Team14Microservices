@@ -236,6 +236,34 @@ function toShoppingCart(){
     }
 }
 
+/* I'm feeling lucky feature - Vincent Scala */
+function feelingLucky() {
+
+    !($.trim($('#title').val()) == '') ? item ["title"] = $('#title').val(): '';
+    !($.trim($('#operating_system').val()) == '') ? item ["operating_system"] = $('#operating_system').val(): '';
+    !($.trim($('#min_price').val()) == '') ? item ["price_from"] = $('#min_price').val(): '';
+    !($.trim($('#max_price').val()) == '') ? item ["price_to"] = $('#max_price').val(): '';
+
+    jsonObj.push(item);
+
+    $.ajax({
+        url: Url+'GetProduct', 
+        type: 'get',
+        dataType: 'json', 
+        contentType: 'text/plain', 
+        data: jsonObj[0], 
+
+        success: function (data) { 
+            fetchOneProduct(data['data']['List'][0]['id'])
+
+        },
+        error: function (data) { 
+            alert("Error while fetching data.");
+        }
+
+    });
+}
+
 $('#exampleModal').on('show.bs.modal', function (event) {
     $('#ajaxForm').trigger("reset");
     var button = $(event.relatedTarget);
